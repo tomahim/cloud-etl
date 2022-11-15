@@ -3,7 +3,13 @@
   "app_name": "etl-functions",
   "stages": {
     "dev": {
-      "api_gateway_stage": "api"
+      "api_gateway_stage": "api",
+      "autogen_policy": false,
+      "iam_policy_file": "dev-app-policy.json",
+      "environment_variables": {
+          "PROVIDER_AWS_ACCESS_KEY_ID": "AKIAS7K2DWIKUSJUZEN5",
+          "PROVIDER_AWS_SECRET_ACCESS_KEY": "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"
+      }
     }
   }
 }

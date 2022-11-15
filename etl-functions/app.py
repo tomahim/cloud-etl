@@ -1,11 +1,43 @@
+import os
+import uuid
+import boto3
+
+import requests
+from bs4 import BeautifulSoup
 from chalice import Chalice
 
 app = Chalice(app_name='etl-functions')
+
+AWS_ACCESS_KEY_ID = os.environ.get("PROVIDER_AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = os.environ.get("PROVIDER_AWS_SECRET_ACCESS_KEY")
 
 
 @app.route('/')
 def index():
     return {'hello': 'world'}
+
+
+@app.route('/lemonde/international')
+def latest_lemonde_news():
+    url = 'https://www.lemonde.fr/international/'
+    html_text = requests.get(url).text
+    soup = BeautifulSoup(html_text, 'html.parser')
+    latest_news = [l.get_text() for l in soup.find_all("h3", {"class": "teaser__title"})]
+
+    dynamodb = boto3.resource('dynamodb')
+    scrapped_data_table = dynamodb.Table('scrapped-data')
+
+    with scrapped_data_table.batch_writer() as batch:
+        for n in latest_news:
+            batch.put_item(
+                Item={
+                    'id': str(uuid.uuid4()),
+                    'label': 'LEMONDE_NEWS_TITLE',
+                    'data': n
+                }
+            )
+
+    return [{'title': n} for n in latest_news]
 
 
 # The view function above will return {"hello": "world"}

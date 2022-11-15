@@ -1,5 +1,23 @@
 {
-  "resources": [],
+  "resources": [
+    {
+      "name": "api_handler_role",
+      "resource_type": "iam_role",
+      "role_arn": "arn:aws:iam::204736803349:role/etl-functions-dev-api_handler",
+      "role_name": "etl-functions-dev-api_handler"
+    },
+    {
+      "name": "api_handler",
+      "resource_type": "lambda_function",
+      "lambda_arn": "arn:aws:lambda:eu-west-3:204736803349:function:etl-functions-dev"
+    },
+    {
+      "name": "rest_api",
+      "resource_type": "rest_api",
+      "rest_api_id": "k4i7tit1sg",
+      "rest_api_url": "https://k4i7tit1sg.execute-api.eu-west-3.amazonaws.com/api/"
+    }
+  ],
   "schema_version": "2.0",
   "backend": "api"
 }
