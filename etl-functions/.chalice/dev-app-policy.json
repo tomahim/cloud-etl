@@ -12,6 +12,19 @@
               "dynamodb:UpdateItem"
           ],
           "Resource": "arn:aws:dynamodb:eu-west-3:204736803349:table/scrapped-data"
+      },
+      {
+			"Effect": "Allow",
+			"Action": [
+				"logs:CreateLogStream",
+				"logs:PutLogEvents"
+			],
+			"Resource": "arn:aws:logs:eu-west-3:204736803349:*"
+      },
+      {
+          "Effect": "Allow",
+          "Action": "logs:CreateLogGroup",
+          "Resource": "*"
       }
   ]
 }

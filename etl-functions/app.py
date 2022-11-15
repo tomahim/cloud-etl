@@ -3,6 +3,7 @@ import uuid
 import boto3
 
 import requests
+from boto3.dynamodb.conditions import Attr
 from bs4 import BeautifulSoup
 from chalice import Chalice
 
@@ -27,17 +28,25 @@ def latest_lemonde_news():
     dynamodb = boto3.resource('dynamodb')
     scrapped_data_table = dynamodb.Table('scrapped-data')
 
+    res = scrapped_data_table.scan(
+        FilterExpression=Attr('scrapped_data').is_in(latest_news),
+    )
+    existing = [r['scrapped_data'] for r in res['Items']]
+    news = set(latest_news) - set(existing)
+
+    print(f"Inserted news {len(news)}")
+
     with scrapped_data_table.batch_writer() as batch:
-        for n in latest_news:
+        for n in news:
             batch.put_item(
                 Item={
                     'id': str(uuid.uuid4()),
                     'label': 'LEMONDE_NEWS_TITLE',
-                    'data': n
-                }
+                    'scrapped_data': n
+                },
             )
 
-    return [{'title': n} for n in latest_news]
+    return [{'title': n} for n in news]
 
 
 # The view function above will return {"hello": "world"}
