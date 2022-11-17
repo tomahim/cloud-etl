@@ -1,4 +1,5 @@
 import os
+import random
 import uuid
 import boto3
 
@@ -47,6 +48,15 @@ def latest_lemonde_news():
             )
 
     return [{'title': n} for n in news]
+
+
+@app.schedule('rate(1 minute)')
+def every_minute(event):
+    number = random.randint(0, 4)
+    if number > 2:
+        print("fake exception !")
+        raise ValueError("Fake exception")
+    print("I ran !")
 
 
 # The view function above will return {"hello": "world"}

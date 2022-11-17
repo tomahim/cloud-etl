@@ -1,0 +1,14 @@
+{
+    "dev": {
+        "app_function": "app.app",
+        "aws_region": "eu-west-3",
+        "profile_name": "default",
+        "project_name": "zappa-functions",
+        "runtime": "python3.8",
+        "s3_bucket": "zappa-1b0l7vqff",
+        "events": [{
+           "function": "app.lambda_fn",  // The function to execute
+           "expression": "rate(1 minute)"  // When to execute it (in cron or rate format)
+        }],
+    }
+}
